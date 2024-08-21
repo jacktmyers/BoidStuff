@@ -14,7 +14,11 @@ public class BoidManager : MonoBehaviour
     public float ProtectedRange;
     public float VisibleRange;
     public float SeparationFactor;
+    public float CohesionFactor;
     public float AlignFactor;
+    public float TurnFactor;
+    public float MaxSpeed;
+    public float MinSpeed;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +43,7 @@ public class BoidManager : MonoBehaviour
             }
         }
         foreach (BoidBehavior currBoid in AllBoids){
-            currBoid.ReactiveForces(AllBoids.ToArray(), ProtectedRange, VisibleRange, SeparationFactor, AlignFactor);
+            currBoid.ReactiveForces(AllBoids.ToArray(), ProtectedRange, VisibleRange, SeparationFactor, AlignFactor, CohesionFactor, MaxSpeed, MinSpeed, TurnFactor, YSpawnRange, XSpawnRange);
         }
         
     }
