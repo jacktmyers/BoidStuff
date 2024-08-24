@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -214,6 +215,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5794a1796f8b4d4c9c6a4bf9ef65df7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DistanceFromBoid: {fileID: 7200000, guid: 8deed097cdcd4f8488096be4e8cd515b, type: 3}
+--- !u!1 &847585273
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 847585274}
+  m_Layer: 0
+  m_Name: Shader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &847585274
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847585273}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.492612, y: 3.8491817, z: 0.4482525}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1275981409
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,18 +288,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc41d4f941762d43a6b85ac6c4b616f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoidCount: 1
+  BoidCount: 40
   BoidPrefab: {fileID: 5771199181228561858, guid: bbcde0884c3b6854bb7e449d9d3f9575, type: 3}
   YSpawnRange: {x: -5, y: 5}
   XSpawnRange: {x: -9, y: 9}
   ProtectedRange: 2
   VisibleRange: 4
-  SeparationFactor: 0
-  CohesionFactor: 0
-  AlignFactor: 0
-  TurnFactor: 1
+  SeparationFactor: 0.5
+  CohesionFactor: 0.0005
+  AlignFactor: 0.05
+  TurnFactor: 5
   MaxSpeed: 10
-  MinSpeed: 0
+  MinSpeed: 5
 --- !u!4 &1275981411
 Transform:
   m_ObjectHideFlags: 0
@@ -276,3 +321,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 1275981411}
+  - {fileID: 847585274}

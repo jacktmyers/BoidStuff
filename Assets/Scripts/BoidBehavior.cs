@@ -56,11 +56,11 @@ public class BoidBehavior : MonoBehaviour
         }
         return rigidBody.velocity.normalized;
     }
-    public void DeltaVelocity(Vector2 delta){
+    public void ApplyForce(Vector2 thrust){
         if (!initialized){
             return;
         }
-        this.rigidBody.velocity += delta;
+        this.rigidBody.AddForce(thrust,ForceMode2D.Impulse);
     }
     public void OverrideVelocity(Vector2 vel){
         if (!initialized){
@@ -95,7 +95,7 @@ public class BoidBehavior : MonoBehaviour
         foreach(BoidBehavior currBoid in protectedBoids){
             sep += this.Get2DPos() - currBoid.Get2DPos();
         }
-        this.DeltaVelocity(sep*sepFactor);
+        this.ApplyForce(sep*sepFactor);
 
         // Alignment and Cohesion
         Vector2 velAvg = Vector2.zero;
@@ -109,19 +109,19 @@ public class BoidBehavior : MonoBehaviour
         if (visibleCount > 0){
             velAvg = velAvg / visibleCount;
             posAvg = posAvg / visibleCount;
-            this.DeltaVelocity((velAvg - this.Get2DVel())*alignFactor);
-            this.DeltaVelocity((posAvg - this.Get2DPos())*cohesionFactor);
+            this.ApplyForce((velAvg - this.Get2DVel())*alignFactor);
+            this.ApplyForce((posAvg - this.Get2DPos())*cohesionFactor);
         }
 
         // Turn Factor
-        if (this.Get2DVel().x < xBounds.x)
-            this.DeltaVelocity(new Vector2(turnFactor,0));
-        if (this.Get2DVel().x > xBounds.y)
-            this.DeltaVelocity(new Vector2(-1.0f*turnFactor,0));
-        if (this.Get2DVel().y < yBounds.x)
-            this.DeltaVelocity(new Vector2(0,turnFactor));
-        if (this.Get2DVel().y > xBounds.y)
-            this.DeltaVelocity(new Vector2(0,-1.0f*turnFactor));
+        if (this.Get2DPos().x < xBounds.x*0.8f)
+            this.ApplyForce(new Vector2(turnFactor,0));
+        if (this.Get2DPos().x > xBounds.y*0.8f)
+            this.ApplyForce(new Vector2(-1.0f*turnFactor,0));
+        if (this.Get2DPos().y < yBounds.x*0.8f)
+            this.ApplyForce(new Vector2(0,turnFactor));
+        if (this.Get2DPos().y > yBounds.y*0.8f)
+            this.ApplyForce(new Vector2(0,-1.0f*turnFactor));
 
         // Max and Min Speed
         if (this.Get2DSpeed() < minSpeed){

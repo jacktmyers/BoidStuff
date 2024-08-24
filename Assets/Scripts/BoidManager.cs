@@ -26,7 +26,7 @@ public class BoidManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (AllBoids.Count < BoidCount){
             for (int i=0; i<BoidCount-AllBoids.Count; i++){
@@ -45,6 +45,14 @@ public class BoidManager : MonoBehaviour
         foreach (BoidBehavior currBoid in AllBoids){
             currBoid.ReactiveForces(AllBoids.ToArray(), ProtectedRange, VisibleRange, SeparationFactor, AlignFactor, CohesionFactor, MaxSpeed, MinSpeed, TurnFactor, YSpawnRange, XSpawnRange);
         }
-        
+    }
+
+    public BoidBehavior GetFirstBoid()
+    {
+        if (AllBoids.Count == 0)
+        {
+            return null;
+        }
+        return AllBoids.First();
     }
 }
