@@ -12,14 +12,13 @@ int BoidPositionY;
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    float xGradient = abs((float)id.x - (float)BoidPositionX) * Scale;
-    float yGradient = abs((float)id.y - (float)BoidPositionY) * Scale;
-    [branch] if (Result[id.xy].x > xGradient)
+    float xGradient = pow((float)id.x - (float)BoidPositionX,2);
+    float yGradient = pow((float)id.y - (float)BoidPositionY,2);
+
+    float gradient = sqrt(xGradient + yGradient) * Scale;
+    
+    [branch] if (Result[id.xy].x > gradient)
     {
-        Result[id.xy] = float4(xGradient, Result[id.xy].y, 0, 1);
-    }
-    [branch] if (Result[id.xy].y > yGradient)
-    {
-        Result[id.xy] = float4(Result[id.xy].x, yGradient, 0, 1);
+        Result[id.xy] = float4(gradient, gradient, gradient, 1);
     }
 }

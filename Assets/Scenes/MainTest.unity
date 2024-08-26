@@ -227,39 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5794a1796f8b4d4c9c6a4bf9ef65df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DistanceFromBoidXY: {fileID: 7200000, guid: 23045b9e7fe886849b3105ba7c615e60, type: 3}
   DistanceFromBoid: {fileID: 7200000, guid: 8deed097cdcd4f8488096be4e8cd515b, type: 3}
   Fill: {fileID: 7200000, guid: 7bcc00ec58aab14409f93dd12159ed8b, type: 3}
---- !u!1 &847585273
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 847585274}
-  m_Layer: 0
-  m_Name: Shader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &847585274
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847585273}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.492612, y: 3.8491817, z: 0.4482525}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1275981409
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,4 +292,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 1275981411}
-  - {fileID: 847585274}

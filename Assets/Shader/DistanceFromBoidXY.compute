@@ -1,0 +1,25 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+
+float Scale;
+int BoidPositionX;
+int BoidPositionY;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float xGradient = abs((float)id.x - (float)BoidPositionX) * Scale;
+    float yGradient = abs((float)id.y - (float)BoidPositionY) * Scale;
+    [branch] if (Result[id.xy].x > xGradient)
+    {
+        Result[id.xy] = float4(xGradient, Result[id.xy].y, 0, 1);
+    }
+    [branch] if (Result[id.xy].y > yGradient)
+    {
+        Result[id.xy] = float4(Result[id.xy].x, yGradient, 0, 1);
+    }
+}
