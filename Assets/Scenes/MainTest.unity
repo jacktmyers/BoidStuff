@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DistanceFromBoid: {fileID: 7200000, guid: 8deed097cdcd4f8488096be4e8cd515b, type: 3}
+  Fill: {fileID: 7200000, guid: 7bcc00ec58aab14409f93dd12159ed8b, type: 3}
 --- !u!1 &847585273
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc41d4f941762d43a6b85ac6c4b616f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BoidCount: 40
+  BoidCount: 20
   BoidPrefab: {fileID: 5771199181228561858, guid: bbcde0884c3b6854bb7e449d9d3f9575, type: 3}
   YSpawnRange: {x: -5, y: 5}
   XSpawnRange: {x: -9, y: 9}

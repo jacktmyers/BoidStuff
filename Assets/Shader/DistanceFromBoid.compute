@@ -6,11 +6,20 @@
 RWTexture2D<float4> Result;
 
 float Scale;
-int2 BoidPosition;
+int BoidPositionX;
+int BoidPositionY;
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    Result[id.xy] = float4(abs(BoidPosition.x - id.x),abs(BoidPosition.y - id.y),0.0,0.0);
-    Result[id.xy] = Result[id.xy] * Scale;
+    float xGradient = abs((float)id.x - (float)BoidPositionX) * Scale;
+    float yGradient = abs((float)id.y - (float)BoidPositionY) * Scale;
+    [branch] if (Result[id.xy].x > xGradient)
+    {
+        Result[id.xy] = float4(xGradient, Result[id.xy].y, 0, 1);
+    }
+    [branch] if (Result[id.xy].y > yGradient)
+    {
+        Result[id.xy] = float4(Result[id.xy].x, yGradient, 0, 1);
+    }
 }

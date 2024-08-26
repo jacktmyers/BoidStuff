@@ -47,12 +47,12 @@ public class BoidManager : MonoBehaviour
         }
     }
 
-    public BoidBehavior GetFirstBoid()
+    public IEnumerable<BoidBehavior> GetBoidEnumerable()
     {
         if (AllBoids.Count == 0)
         {
             return null;
         }
-        return AllBoids.First();
+        return AllBoids;
     }
 }

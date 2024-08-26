@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 public class ComputeShaderHandler : MonoBehaviour
@@ -9,6 +10,7 @@ public class ComputeShaderHandler : MonoBehaviour
     int screenWidth = Screen.width;
     int screenHeight = Screen.height;
     public ComputeShader DistanceFromBoid;
+    public ComputeShader Fill;
     public bool initialized {get; private set;} = false;
     
     private RenderTexture outTexture;
@@ -49,19 +51,25 @@ public class ComputeShaderHandler : MonoBehaviour
             outTexture.Create();
         }
 
-        GetDistanceFromBoid(boidManagerRef.GetFirstBoid(),outTexture);
+        outTexture.Release();
+        Fill.SetTexture(0,"Result", outTexture);
+        Fill.Dispatch(0,screenWidth/8,screenHeight/8,1);
+        foreach(BoidBehavior boid in boidManagerRef.GetBoidEnumerable()){
+            GetDistanceFromBoid(boid,outTexture);
+        }
         Graphics.Blit(outTexture,dest);
     }
     
     public void GetDistanceFromBoid(BoidBehavior boid, RenderTexture dest)
     {
-        Func<Vector3,Vector2> stripZ = (Vector3 point) => new Vector2(point.x, point.y);
-        Vector2 boidPixelLocation = stripZ(Camera.current.WorldToScreenPoint(new Vector3(boid.transform.position.x, boid.transform.position.y, 0)));
-        float scale = screenWidth > screenHeight ? 1.0f/(float)screenWidth : 1.0f/(float)screenHeight;
-        
+        Func<Vector3,Vector2Int> stripZ = (Vector3 point) => new Vector2Int((int)point.x, (int)point.y);
+        Vector2Int boidPixelLocation = stripZ(Camera.current.WorldToScreenPoint(new Vector3(boid.transform.position.x, boid.transform.position.y, 0)));
+        float scale = (screenWidth > screenHeight) ? (1.0f/(float)screenWidth) : (1.0f/(float)screenHeight);
+
         DistanceFromBoid.SetTexture(0,"Result", dest);
         DistanceFromBoid.SetFloat("Scale",scale);
-        DistanceFromBoid.SetVector("BoidPosition",boidPixelLocation);
+        DistanceFromBoid.SetInt("BoidPositionX",boidPixelLocation.x);
+        DistanceFromBoid.SetInt("BoidPositionY",boidPixelLocation.y);
         DistanceFromBoid.Dispatch(0,screenWidth/8,screenHeight/8,1);
     }
 }
