@@ -10,21 +10,42 @@ using Vector2 = UnityEngine.Vector2;
 
 public class BoidBehavior : MonoBehaviour
 {
+    //-FOR DEBUGGING RANGES-//
     [Min(10)]
     public int CirclePointCount;
-    private Rigidbody2D rigidBody;
     private LineRenderer visibleRenderer;
     private LineRenderer protectedRenderer;
+    //=-=-=-=-=-=-=-=-=-=-=-//
+
+    private Rigidbody2D rigidBody;
+    private BoidSettings boidSettings;
     public bool ShowRanges = false;
-    public bool initialized {get; private set;} = false;
+    public bool Initialized {get; private set;} = false;
+    public bool Active {get; private set;} = false;
+    public string Id;
+    public DateTime Death;
+    public DateTime Birth;
+    public Vector2 StartingVelocity = new Vector2(0,0);
+    public GameObject FollowObject;
     // Start is called before the first frame update
     void Start()
     {
         rigidBody = this.gameObject.GetComponent<Rigidbody2D>();
         visibleRenderer = this.gameObject.transform.Find("VisibleRange").GetComponent<LineRenderer>();
         protectedRenderer = this.gameObject.transform.Find("ProtectedRange").GetComponent<LineRenderer>();
-
-        initialized = true;
+        Initialized = true;
+    }
+    public void SetBoidSettings(BoidSettings settings)
+    {
+        this.boidSettings = settings;
+    }
+    public void Activate(){
+        OverrideVelocity(StartingVelocity);
+        if (boidSettings.Follow)
+        {
+            this.gameObject.transform.position = Get2DPos(FollowObject);
+        }
+        Active = true;
     }
 
     // Update is called once per frame
@@ -33,37 +54,40 @@ public class BoidBehavior : MonoBehaviour
         
     }
     public Vector2 Get2DPos(){
-        if (!initialized){
+        if (!Initialized){
             return Vector2.zero;
         }
         return new Vector2(this.gameObject.transform.position.x,this.gameObject.transform.position.y);
     }
+    public Vector2 Get2DPos(GameObject go){
+        return new Vector2(go.transform.position.x, go.transform.position.y);
+    }
     public Vector2 Get2DVel(){
-        if (!initialized){
+        if (!Initialized){
             return Vector2.zero;
         }
         return rigidBody.velocity;
     }
     public float Get2DSpeed(){
-        if (!initialized){
+        if (!Initialized){
             return 0;
         }
         return rigidBody.velocity.sqrMagnitude;
     }
     public Vector2 Get2DDirection(){
-        if (!initialized){
+        if (!Initialized){
             return Vector2.zero;
         }
         return rigidBody.velocity.normalized;
     }
-    public void ApplyForce(Vector2 thrust){
-        if (!initialized){
-            return;
+    public IEnumerator ApplyForce(Vector2 thrust){
+        while (!this.Initialized){
+            yield return null;
         }
         this.rigidBody.AddForce(thrust,ForceMode2D.Impulse);
     }
     public void OverrideVelocity(Vector2 vel){
-        if (!initialized){
+        if (!Initialized){
             return;
         }
         this.rigidBody.velocity = vel;
@@ -77,25 +101,23 @@ public class BoidBehavior : MonoBehaviour
         }
     }
     
-    public void ReactiveForces(BoidBehavior[] boids, float protectedRange, float visibleRange, float sepFactor, float alignFactor, float cohesionFactor, float minSpeed, float maxSpeed, float turnFactor, Vector2 yBounds, Vector2 xBounds){
-        if (!initialized) {
+    public void ReactiveForces(BoidBehavior[] boids){
+        if (!Initialized || !Active) {
             return;
         }
-        
         if (ShowRanges){
-            RenderRange(protectedRenderer,protectedRange);
-            RenderRange(visibleRenderer,visibleRange);
+            RenderRange(protectedRenderer,boidSettings.ProtectedRange);
+            RenderRange(visibleRenderer,boidSettings.VisibleRange);
         }
-
-        BoidBehavior[] protectedBoids = boids.Where(b => Vector2.Distance(b.Get2DPos(), this.Get2DPos()) < protectedRange).ToArray();
-        BoidBehavior[] visibleBoids = boids.Where(b => Vector2.Distance(b.Get2DPos(), this.Get2DPos()) < visibleRange && !protectedBoids.Contains(b)).ToArray();
+        BoidBehavior[] protectedBoids = boids.Where(b => Vector2.Distance(b.Get2DPos(), this.Get2DPos()) < boidSettings.ProtectedRange).ToArray();
+        BoidBehavior[] visibleBoids = boids.Where(b => Vector2.Distance(b.Get2DPos(), this.Get2DPos()) < boidSettings.VisibleRange && !protectedBoids.Contains(b)).ToArray();
 
         // Separation
         Vector2 sep = Vector2.zero;
         foreach(BoidBehavior currBoid in protectedBoids){
             sep += this.Get2DPos() - currBoid.Get2DPos();
         }
-        this.ApplyForce(sep*sepFactor);
+        StartCoroutine(ApplyForce(sep*boidSettings.SeparationFactor));
 
         // Alignment and Cohesion
         Vector2 velAvg = Vector2.zero;
@@ -109,26 +131,34 @@ public class BoidBehavior : MonoBehaviour
         if (visibleCount > 0){
             velAvg = velAvg / visibleCount;
             posAvg = posAvg / visibleCount;
-            this.ApplyForce((velAvg - this.Get2DVel())*alignFactor);
-            this.ApplyForce((posAvg - this.Get2DPos())*cohesionFactor);
+            StartCoroutine(this.ApplyForce((velAvg - this.Get2DVel())*boidSettings.AlignFactor));
+            StartCoroutine(this.ApplyForce((posAvg - this.Get2DPos())*boidSettings.CohesionFactor));
         }
 
+        // TODO: FIX THIS TO BE MORE FLEXIBLE
         // Turn Factor
+        /*
         if (this.Get2DPos().x < xBounds.x*0.8f)
-            this.ApplyForce(new Vector2(turnFactor,0));
+            StartCoroutine(this.ApplyForce(new Vector2(turnFactor,0)));
         if (this.Get2DPos().x > xBounds.y*0.8f)
-            this.ApplyForce(new Vector2(-1.0f*turnFactor,0));
+            StartCoroutine(this.ApplyForce(new Vector2(-1.0f*turnFactor,0)));
         if (this.Get2DPos().y < yBounds.x*0.8f)
-            this.ApplyForce(new Vector2(0,turnFactor));
+            StartCoroutine(this.ApplyForce(new Vector2(0,turnFactor)));
         if (this.Get2DPos().y > yBounds.y*0.8f)
-            this.ApplyForce(new Vector2(0,-1.0f*turnFactor));
+            StartCoroutine(ApplyForce(new Vector2(0,-1.0f*turnFactor)));
+        */
 
-        // Max and Min Speed
-        if (this.Get2DSpeed() < minSpeed){
-            this.OverrideVelocity(this.Get2DDirection() * minSpeed);
+        // Following Point
+        if (boidSettings.Follow){
+            StartCoroutine(ApplyForce((Get2DPos(FollowObject) - this.Get2DPos())*boidSettings.FollowFactor));
         }
-        else if  (this.Get2DSpeed() > maxSpeed){
-            this.OverrideVelocity(this.Get2DDirection() * maxSpeed);
+        
+        // Max and Min Speed
+        if (this.Get2DSpeed() < boidSettings.MinSpeed){
+            this.OverrideVelocity(this.Get2DDirection() * boidSettings.MinSpeed);
+        }
+        else if  (this.Get2DSpeed() > boidSettings.MaxSpeed){
+            this.OverrideVelocity(this.Get2DDirection() * boidSettings.MaxSpeed);
         }
     }
 }

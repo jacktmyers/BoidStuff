@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 367835db9da0822458421f14367fb8f1, type: 3}
+  m_Name: Wake
+  m_EditorClassIdentifier: 
+  BoidPrefab: {fileID: 5771199181228561858, guid: bbcde0884c3b6854bb7e449d9d3f9575, type: 3}
+  SpawnLocation: {x: 0, y: 0}
+  StartVelocity: {x: -1, y: -1}
+  Splash: 0
+  Wake: 1
+  Persistent: 0
+  Follow: 1
+  BoidCount: 1
+  SpawnCoolDown: 0.05
+  DespawnCoolDown: 0.1
+  Lifetime: 1
+  ProtectedRange: 0.5
+  VisibleRange: 3
+  SeparationFactor: 0.5
+  CohesionFactor: 0.3
+  AlignFactor: 0.01
+  FollowFactor: 0
+  TurnFactor: 5
+  MaxSpeed: 3
+  MinSpeed: 1
+  StartSpeed: 1
+  WakeAngle: 120

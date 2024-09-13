@@ -1,0 +1,20 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+RWStructuredBuffer<float2> Result;
+RWStructuredBuffer<float> rotations;
+
+float2 RotateVector(float2 v, float rot);
+
+[numthreads(8,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    Result[id.x] = RotateVector(Result[id.x], rotations[id.x]);
+}
+
+float2 RotateVector(float2 v, float rot){
+    return float2((v.x*cos(rot))-(v.y*sin(rot)),(v.x*sin(rot))+(v.y*(cos(rot))));
+}

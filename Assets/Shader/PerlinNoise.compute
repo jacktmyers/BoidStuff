@@ -1,0 +1,76 @@
+//https://fancyfennec.medium.com/perlin-noise-and-untiy-compute-shaders-f00736a002a4
+#pragma kernel CSMain
+
+RWTexture2D<float> Result;
+float res;
+RWStructuredBuffer<float2> gradients;
+float tx;
+float ty;
+int passes;
+
+float dropOff(float x);
+float noiseS(float2 g, float2 v);
+float noise(float4 v);
+float2 grad(uint2 u);
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // divide x and y both by res to get a value to get UV coords
+    float4 v = float4(id.xyxy) / res;
+    float h = 0.0;
+
+    // Layering of perlin noise
+    for (int i = 0; i < passes; i++)
+    {
+        // Scale of each height: 1/4 1/8 1/16 1/32 1/64 1/128
+        // Resolution/size of the perlin noise: 2 4 8 16 32 64
+        h += (1.0 + noise(float4(id.xyxy) * pow(2.0, i) / res)) * pow(2.0, - (i + 2));
+    }
+    //Result[id.xy] = h * scale;
+    Result[id.xy] = h;
+}
+
+
+// The Bell-Like Curve
+float dropOff(float x)
+{
+    float v = 1 - abs(x);
+    //return 3 * v * v - 2 * v * v * v; // weird normals
+
+    // This is that nice function that gives us proper inflection at 1 and 0
+    return 6 * pow(v, 5) - 15 * pow(v, 4) + 10 * pow(v, 3); // nice normals
+}
+
+// The lookup for the random gradients we send the shader these are normalized
+float2 grad(uint2 u)
+{
+    return gradients[(u.x + u.y * 16) % 256];
+}
+
+// Need to test this to understand what it is doing
+// I think this is used 
+float noiseS(float2 g, float2 v)
+{
+    // g is our random gradient
+    // V is the value 0 <= v.xy <= 1 is is our location within the box
+    //g = -.5,-.5
+    //v = -.5,.5
+    return dot(g, v.xy) * dropOff(v.x) * dropOff(v.y);
+}
+
+float noise(float4 v)
+{
+    // t is our time
+    v += float4(tx, ty, tx, ty);
+
+    // gi is the integer value of our vector and the next values
+    // I think this is used for the gradient lookup
+    uint4 gi = floor(v.xyxy) + uint4(0, 0, 1, 1);
+
+    // v gets reassigned to be the decimal portion of vector and an offset of -1
+    v = frac(v.xyxy) - float4(0.0, 0.0, 1.0, 1.0);
+    
+    // This is our bicubic interpolation
+    return noiseS(grad(gi.xy), v.xy) + noiseS(grad(gi.zy), v.zy) + noiseS(grad(gi.xw), v.xw) + noiseS(grad(gi.zw), v.zw);
+}
