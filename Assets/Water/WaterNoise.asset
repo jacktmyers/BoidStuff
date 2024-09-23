@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WaterNoise
   m_EditorClassIdentifier: 
   Passes: 2
-  Scale: 0.1
-  SpeedX: 0.2
-  SpeedY: 0.2
+  Scale: 0.09
+  Speed: {x: 2, y: 2}
   Turbulence: 0.01
+  AddedDropOff: 30

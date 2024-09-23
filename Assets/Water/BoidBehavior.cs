@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
@@ -27,9 +28,11 @@ public class BoidBehavior : MonoBehaviour
     public DateTime Birth;
     public Vector2 StartingVelocity = new Vector2(0,0);
     public GameObject FollowObject;
+    public Vector2 CustomForce;
     // Start is called before the first frame update
     void Start()
     {
+        CustomForce = Vector2.zero;
         rigidBody = this.gameObject.GetComponent<Rigidbody2D>();
         visibleRenderer = this.gameObject.transform.Find("VisibleRange").GetComponent<LineRenderer>();
         protectedRenderer = this.gameObject.transform.Find("ProtectedRange").GetComponent<LineRenderer>();
@@ -152,6 +155,8 @@ public class BoidBehavior : MonoBehaviour
         if (boidSettings.Follow){
             StartCoroutine(ApplyForce((Get2DPos(FollowObject) - this.Get2DPos())*boidSettings.FollowFactor));
         }
+
+        StartCoroutine(ApplyForce(CustomForce));
         
         // Max and Min Speed
         if (this.Get2DSpeed() < boidSettings.MinSpeed){

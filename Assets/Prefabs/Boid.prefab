@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7312643350550116741}
   - component: {fileID: 3761979549429495004}
   - component: {fileID: 5771199181228561858}
-  - component: {fileID: 4259551245234749234}
   - component: {fileID: 2316127330235439314}
   - component: {fileID: 9028041868002859502}
   m_Layer: 0
@@ -105,41 +104,8 @@ MonoBehaviour:
   CirclePointCount: 30
   ShowRanges: 0
   Id: 
---- !u!58 &4259551245234749234
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 897562502457382941}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.1
+  StartingVelocity: {x: 0, y: 0}
+  FollowObject: {fileID: 0}
 --- !u!120 &2316127330235439314
 LineRenderer:
   serializedVersion: 2

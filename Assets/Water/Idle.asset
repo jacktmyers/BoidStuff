@@ -10,27 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 367835db9da0822458421f14367fb8f1, type: 3}
-  m_Name: Wake
+  m_Name: Idle
   m_EditorClassIdentifier: 
   BoidPrefab: {fileID: 5771199181228561858, guid: bbcde0884c3b6854bb7e449d9d3f9575, type: 3}
   SpawnLocation: {x: 0, y: 0}
   StartVelocity: {x: -1, y: -1}
-  Splash: 0
-  Wake: 1
+  Splash: 1
+  Wake: 0
   Persistent: 0
   Follow: 1
   BoidCount: 1
   SpawnCoolDown: 0.05
   DespawnCoolDown: 0.1
-  Lifetime: 1
-  ProtectedRange: 0.5
+  Lifetime: 0.75
+  ProtectedRange: 1
   VisibleRange: 3
   SeparationFactor: 0.5
-  CohesionFactor: 0.3
-  AlignFactor: 0.01
-  FollowFactor: 0
+  CohesionFactor: 0.1
+  AlignFactor: 0.1
+  FollowFactor: 1
   TurnFactor: 5
-  MaxSpeed: 3
-  MinSpeed: 1
-  StartSpeed: 1
-  WakeAngle: 120
+  MaxSpeed: 0.5
+  MinSpeed: 0.25
+  StartSpeed: 0
+  WakeAngle: 60

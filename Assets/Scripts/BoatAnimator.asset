@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 008b4c93dd76efb40b77de4b1449ec27, type: 3}
+  m_Name: BoatAnimator
+  m_EditorClassIdentifier: 
+  DefaultKeyFrame: {fileID: 3286163911610860551, guid: bb18d5657e51d1f4daef4004bc41df91, type: 3}
+  ShootingKeyFrames:
+  - {fileID: 3286163911610860551, guid: 49e089dc8d346e248941e1c666b920dd, type: 3}
+  - {fileID: 3286163911610860551, guid: e587204b0c4e7aa4c8027bbd7fd41301, type: 3}
+  - {fileID: 3286163911610860551, guid: b4ab5b8e9e0dead4a87a7386f6a5e462, type: 3}
+  ShootingDelays:
+  - 1
+  - 1
+  - 1
+  Shake: 0

@@ -2,35 +2,44 @@
 #pragma kernel CSMain
 
 RWTexture2D<float> Result;
+RWTexture2D<float> distances;
 float res;
 RWStructuredBuffer<float2> gradients;
-float tx;
-float ty;
+float2 t;
+float dropOffScale;
 int passes;
 
 float dropOff(float x);
+float scaledDropOff(float x, float scale);
 float noiseS(float2 g, float2 v);
-float noise(float4 v);
+float2 noise(float4 v);
 float2 grad(uint2 u);
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     // divide x and y both by res to get a value to get UV coords
-    float4 v = float4(id.xyxy) / res;
+    float4 v = (float4(id.xyxy) + float4(t.xyxy)) / res;
     float h = 0.0;
+
+    // Result[id.xy] = noise(float4(v.xyxy) * pow(2.0, 0));
 
     // Layering of perlin noise
     for (int i = 0; i < passes; i++)
     {
         // Scale of each height: 1/4 1/8 1/16 1/32 1/64 1/128
         // Resolution/size of the perlin noise: 2 4 8 16 32 64
-        h += (1.0 + noise(float4(id.xyxy) * pow(2.0, i) / res)) * pow(2.0, - (i + 2));
+        h += (1.0 + noise(float4(v.xyxy) * pow(2.0, i))) * pow(2.0, - (i + 2));
     }
     //Result[id.xy] = h * scale;
-    Result[id.xy] = h;
+    Result[id.xy] = h * scaledDropOff(distances[id.xy], dropOffScale);
+    //Result[id.xy] = noise(float4(v.xyxy));
 }
 
+float scaledDropOff(float x, float scale)
+{
+    return min((6 * pow(x*scale, 5) - 15 * pow(x*scale, 4) + 10 * pow(x*scale, 3)),(float)1);
+}
 
 // The Bell-Like Curve
 float dropOff(float x)
@@ -46,6 +55,7 @@ float dropOff(float x)
 float2 grad(uint2 u)
 {
     return gradients[(u.x + u.y * 16) % 256];
+    // return float2(u.x + u.y * 16 % 256,u.x + u.y * 16 % 256);
 }
 
 // Need to test this to understand what it is doing
@@ -59,14 +69,14 @@ float noiseS(float2 g, float2 v)
     return dot(g, v.xy) * dropOff(v.x) * dropOff(v.y);
 }
 
-float noise(float4 v)
+float2 noise(float4 v)
 {
     // t is our time
-    v += float4(tx, ty, tx, ty);
+    //v += float4(tx, ty, tx, ty);
 
     // gi is the integer value of our vector and the next values
-    // I think this is used for the gradient lookup
-    uint4 gi = floor(v.xyxy) + uint4(0, 0, 1, 1);
+    // This is used for the gradient lookup
+    int4 gi = floor(v.xyxy) + uint4(0, 0, 1, 1);
 
     // v gets reassigned to be the decimal portion of vector and an offset of -1
     v = frac(v.xyxy) - float4(0.0, 0.0, 1.0, 1.0);

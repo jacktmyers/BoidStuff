@@ -8,17 +8,15 @@ RWTexture2D<float> Result;
 float Scale;
 int BoidPositionX;
 int BoidPositionY;
+int screenScale;
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-    float xGradient = pow((float)id.x - (float)BoidPositionX,2);
-    float yGradient = pow((float)id.y - (float)BoidPositionY,2);
+    float xGradient = pow(((float)id.x * screenScale) - (float)BoidPositionX,2);
+    float yGradient = pow(((float)id.y * screenScale) - (float)BoidPositionY,2);
 
     float gradient = sqrt(xGradient + yGradient) * Scale;
     
-    [branch] if (Result[id.xy] > gradient)
-    {
-        Result[id.xy] = gradient;
-    }
+    Result[id.xy] = min(Result[id.xy], gradient);
 }

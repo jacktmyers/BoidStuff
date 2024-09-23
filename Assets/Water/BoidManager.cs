@@ -10,11 +10,13 @@ using Random = UnityEngine.Random;
 using Quaternion = UnityEngine.Quaternion;
 using System.Security.Cryptography;
 using UnityEngine.SocialPlatforms;
+using UnityEditor.Experimental.GraphView;
 
 
 public class BoidManager : MonoBehaviour
 {
     private List<BoidBehavior> AllBoids;
+    private Vector2 offScreenTranslation;
     void Start()
     {
         AllBoids = new List<BoidBehavior>();
@@ -36,6 +38,7 @@ public class BoidManager : MonoBehaviour
             }
             if (boid.Active) {
                 boid.ReactiveForces(AllBoids.ToArray());    
+                boid.transform.position = boid.transform.position + Time.deltaTime * new Vector3(offScreenTranslation.x,offScreenTranslation.y,0);
             }
         }
         foreach (BoidBehavior boid in ToDie){
@@ -81,7 +84,6 @@ public class BoidManager : MonoBehaviour
             else if (settings.Wake && settings.Follow){
                 float calcAngle = (180.0f - settings.WakeAngle)*(float)Math.PI/360.0f;
                 float randAngle = Random.Range(calcAngle,(float)Math.PI - calcAngle);
-                Vector2 test = followObject.transform.TransformDirection(new Vector2((float)Math.Cos(randAngle), (float)Math.Sin(randAngle)));
                 currBoid.StartingVelocity = followObject.transform.TransformDirection(new Vector2((float)Math.Cos(randAngle), (float)Math.Sin(randAngle)) * -1 * settings.StartSpeed);
             }
             AllBoids.Add(currBoid);
@@ -99,5 +101,8 @@ public class BoidManager : MonoBehaviour
     public IEnumerable<BoidBehavior> GetBoidEnumerable()
     {
         return AllBoids;
+    }
+    public void MovingOffScreen(Vector2 dir){
+        offScreenTranslation = dir;
     }
 }
