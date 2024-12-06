@@ -23,6 +23,7 @@ using Vector4 = UnityEngine.Vector4;
 
 public class ComputeShaderHandler : MonoBehaviour
 {
+    private Vector2 boidOffset;
     public int WaterScreenScale;
     public ComputeShader DistanceFromBoidXY;
     public ComputeShader DistanceFromBoid;
@@ -47,15 +48,14 @@ public class ComputeShaderHandler : MonoBehaviour
     private ComputeBuffer Gradients;
     private ComputeBuffer RandomRotations;
     public Texture2D ProbeTexture;
-    private Vector2 movement;
     private int waterWidth;
     private int waterHeight;
     private Vector2 currentLoc;
     // Start is called before the first frame update
     void Start()
     {
-        movement = new Vector2(0,0);
         currentLoc = new Vector2(0,0);
+        boidOffset = new Vector2(0,0);
         boidManagerRef = FindObjectsOfType<BoidManager>().First();
         if (boidManagerRef == null){
             throw new Exception("No Object in Scene With Boid Manager Component");
@@ -140,11 +140,10 @@ public class ComputeShaderHandler : MonoBehaviour
 		RotateVec2.Dispatch(0, 256/8, 1, 1);
 	}
     public void GeneratePerlinNoise(ComputeBuffer gradients, PerlinNoiseSettings settings, RenderTexture distances, RenderTexture dest){
-        currentLoc += (settings.Speed + movement) * Time.deltaTime;
 		PerlinNoise.SetTexture(0, "Result", dest);
 		PerlinNoise.SetTexture(0, "distances", distances);
 		PerlinNoise.SetFloat("res", (float)dest.height > dest.width? dest.height * settings.Scale : dest.width * settings.Scale);
-		PerlinNoise.SetVector("t", currentLoc);
+		PerlinNoise.SetVector("t", currentLoc + Time.timeSinceLevelLoad*settings.Speed);
 		PerlinNoise.SetBuffer(0, "gradients", gradients);
 		PerlinNoise.SetFloat("passes", (float)settings.Passes);
         PerlinNoise.SetFloat("dropOffScale", settings.AddedDropOff);
@@ -174,7 +173,7 @@ public class ComputeShaderHandler : MonoBehaviour
         Debug.Log($"{testPoint % dest.width},{testPoint/dest.width}");
         */
         foreach(BoidBehavior boid in boidManagerRef.GetBoidEnumerable()){
-            GetDistanceFromBoid(boid,dest);
+            GetDistanceFromBoid(boid, dest);
         }
     }
     public void GetDistanceFromBoid(BoidBehavior boid, RenderTexture dest)
@@ -188,8 +187,8 @@ public class ComputeShaderHandler : MonoBehaviour
         DistanceFromBoid.SetTexture(0,"Result", dest);
         DistanceFromBoid.SetFloat("Scale",scale);
         DistanceFromBoid.SetInt("screenScale", WaterScreenScale);
-        DistanceFromBoid.SetInt("BoidPositionX",boidPixelLocation.x);
-        DistanceFromBoid.SetInt("BoidPositionY",boidPixelLocation.y);
+        DistanceFromBoid.SetFloat("BoidPositionX",(float)boidPixelLocation.x - currentLoc.x * WaterScreenScale);
+        DistanceFromBoid.SetFloat("BoidPositionY",(float)boidPixelLocation.y - currentLoc.y * WaterScreenScale);
 
         // For Testing
         //DistanceFromBoid.SetInt("BoidPositionX",Screen.width);
@@ -210,7 +209,12 @@ public class ComputeShaderHandler : MonoBehaviour
         tex.Apply();
         return tex;
     }
-    public void MovingOffScreen(Vector2 dir){
-        movement = dir;
+    public void UpdateScreenPositionY(float _pos, float _ref){
+        currentLoc.y = (_pos - _ref) * waterHeight / this.transform.localScale.y;
+        boidOffset.y = _pos - _ref;
+    }
+    public void UpdateScreenPositionX(float _pos, float _ref){
+        currentLoc.x = (_pos - _ref) * waterWidth / this.transform.localScale.x;
+        boidOffset.x = _pos - _ref;
     }
 }

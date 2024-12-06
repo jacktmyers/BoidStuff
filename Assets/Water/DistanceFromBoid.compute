@@ -6,8 +6,8 @@
 RWTexture2D<float> Result;
 
 float Scale;
-int BoidPositionX;
-int BoidPositionY;
+float BoidPositionX;
+float BoidPositionY;
 int screenScale;
 
 [numthreads(8,8,1)]

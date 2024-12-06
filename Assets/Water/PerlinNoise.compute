@@ -19,6 +19,17 @@ float2 grad(uint2 u);
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     // divide x and y both by res to get a value to get UV coords
+
+    // Example
+    /*
+    water_tex_size = 256x256
+
+    |---10---|--------20--------|
+
+             +-----------------+
+    **       |        s       e|
+             +-----------------+
+    */
     float4 v = (float4(id.xyxy) + float4(t.xyxy)) / res;
     float h = 0.0;
 

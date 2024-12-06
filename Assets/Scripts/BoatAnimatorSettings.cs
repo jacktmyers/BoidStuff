@@ -10,5 +10,6 @@ public class BoatAnimatorSettings : ScriptableObject
     public List<Sprite> ChargingKeyFrames;
     public List<float> ShootingDelays;
     public List<float> ChargingDelays;
+    public List<float> ChargingForces;
     public float Shake;
 }

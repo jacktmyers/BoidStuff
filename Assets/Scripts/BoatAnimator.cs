@@ -19,6 +19,16 @@ public class BoatAnimator : MonoBehaviour
         chargeStarted = DateTime.MaxValue;
         shot = DateTime.MaxValue;
     }
+    public float GetChargingForce(float timeVal){
+        float total = 0.0f;
+        for(int i=0; i<Settings.ChargingDelays.Count; i++){
+            total += Settings.ChargingDelays[i];
+            if (timeVal < total){
+                return Settings.ChargingForces[i];
+            }
+        }
+        return Settings.ChargingForces[Settings.ChargingForces.Count-1];
+    }
 
     // Update is called once per frame
     void Update()

@@ -16,4 +16,4 @@ MonoBehaviour:
   Scale: 0.09
   Speed: {x: 2, y: 2}
   Turbulence: 0.01
-  AddedDropOff: 30
+  AddedDropOff: 25

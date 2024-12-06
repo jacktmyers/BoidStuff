@@ -11,6 +11,7 @@ using Quaternion = UnityEngine.Quaternion;
 using System.Security.Cryptography;
 using UnityEngine.SocialPlatforms;
 using UnityEditor.Experimental.GraphView;
+using TMPro;
 
 
 public class BoidManager : MonoBehaviour
@@ -101,8 +102,5 @@ public class BoidManager : MonoBehaviour
     public IEnumerable<BoidBehavior> GetBoidEnumerable()
     {
         return AllBoids;
-    }
-    public void MovingOffScreen(Vector2 dir){
-        offScreenTranslation = dir;
     }
 }

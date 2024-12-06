@@ -14,11 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultKeyFrame: {fileID: 3286163911610860551, guid: bb18d5657e51d1f4daef4004bc41df91, type: 3}
   ShootingKeyFrames:
+  - {fileID: 3286163911610860551, guid: 94c9d7e6af6e26d41bccb29fcfe0e430, type: 3}
+  - {fileID: 3286163911610860551, guid: b4ab5b8e9e0dead4a87a7386f6a5e462, type: 3}
+  - {fileID: 3286163911610860551, guid: e587204b0c4e7aa4c8027bbd7fd41301, type: 3}
+  - {fileID: 3286163911610860551, guid: 49e089dc8d346e248941e1c666b920dd, type: 3}
+  - {fileID: 3286163911610860551, guid: bb18d5657e51d1f4daef4004bc41df91, type: 3}
+  ChargingKeyFrames:
+  - {fileID: 3286163911610860551, guid: bb18d5657e51d1f4daef4004bc41df91, type: 3}
   - {fileID: 3286163911610860551, guid: 49e089dc8d346e248941e1c666b920dd, type: 3}
   - {fileID: 3286163911610860551, guid: e587204b0c4e7aa4c8027bbd7fd41301, type: 3}
   - {fileID: 3286163911610860551, guid: b4ab5b8e9e0dead4a87a7386f6a5e462, type: 3}
+  - {fileID: 3286163911610860551, guid: 94c9d7e6af6e26d41bccb29fcfe0e430, type: 3}
   ShootingDelays:
+  - 0.01
+  - 0.01
+  - 0.01
+  - 0.05
+  - 0
+  ChargingDelays:
+  - 0
+  - 0.1
+  - 0.1
+  - 0.5
   - 1
-  - 1
-  - 1
+  ChargingForces:
+  - 3
+  - 8
+  - 8
+  - 8
+  - 8
+  - 8
   Shake: 0
